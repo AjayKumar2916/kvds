@@ -67,8 +67,10 @@ class KVDS(object):
     def check_expired(self, ttl):
         # Checking weather the key is expired 
         # or not.
-        now = epoch_time_stamp(datetime.now())
-        return ttl < now
+        if ttl > 0:
+            now = epoch_time_stamp(datetime.now())
+            return ttl < now
+        return False
 
     def create(self, key, value, ttl=None):
         # A new key-value pair is added to
@@ -85,6 +87,8 @@ class KVDS(object):
                 kv[key] = str(value)
                 if ttl:
                     kv['ttl'] = self.set_ttl(int(ttl))
+                else:
+                    kv['ttl'] = 0
                 data.append(kv)
                 self.update_json_file(data)
                 print('Successfully created a key "{0}"'.format(key))
@@ -133,6 +137,6 @@ class KVDS(object):
 
 if __name__ == "__main__":
     kvds = KVDS(filename=FILE_NAME, filepath=FILE_PATH)
-    # kvds.create('jerry', 'nibble', 300)
-    # kvds.read('jerry')
-    # kvds.delete('spike')
+    # kvds.create('vijay', 'ajith', 300)
+    # kvds.read('vijay')
+    # kvds.delete('ajith')
